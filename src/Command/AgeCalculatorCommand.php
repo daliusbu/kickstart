@@ -26,7 +26,6 @@ class AgeCalculatorCommand extends Command
         parent::__construct();
     }
 
-
     protected function configure()
     {
         $this
@@ -36,6 +35,11 @@ class AgeCalculatorCommand extends Command
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|void|null
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
@@ -44,18 +48,18 @@ class AgeCalculatorCommand extends Command
         $person = $this->personManager->getPerson($arg1);
         $age = $person->getAge();
         $isAdult = $person->isAdult();
+        $hasOption = $input->getOption('adult');
+        $reply = $isAdult? 'YES !!' : 'NO !!!';
 
         if ( $age ) {
-            $io->note(sprintf('Your age is: %s', $age));
-            if ($input->getOption('adult') && $isAdult) {
-                $io->success( 'You are definitely adult');
-            } else if ($input->getOption('adult') && !$isAdult){
-                $io->warning( 'Sorry, you are not Adult');
+            $io->note(sprintf('I am %s years old', $age));
+            if ( $hasOption && $isAdult) {
+                $io->success( sprintf('Am I an adult? ---- %s', $reply));
+            } else if ( $hasOption && !$isAdult){
+                $io->warning( sprintf('Am I an adult? ---- %s', $reply));
             }
         } else {
-            $io->note('Wrong date input format - please enter date as "YYYY-mm-dd"');
+            $io->note('Wrong input date format - please enter date as "yyyy-mm-dd"');
         }
-
-
     }
 }

@@ -6,3 +6,5 @@ services:
 
   app.age.validator:
     class: App\Age\Validator
+    arguments:
+      $adultAge: 18

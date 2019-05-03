@@ -11,16 +11,31 @@ namespace App\Age;
 
 class Validator
 {
+    /**
+     * @var int
+     */
+    private $adultAge;
 
-    public function validateAdulthood($age)
+    /**
+     * Validator constructor.
+     * @param int $adultAge
+     */
+    public function __construct(int $adultAge)
     {
-        $adultAge = 18;
-        if ($age >= $adultAge){
+        $this->adultAge = $adultAge;
+    }
+
+    /**
+     * @param int $age
+     * @return bool
+     */
+    public function validateAdulthood(int $age)
+    {
+        if ($age >= $this->adultAge){
             $result = true;
         } else{
             $result = false;
         }
-var_dump($age);
         return $result;
     }
 }

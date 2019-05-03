@@ -11,10 +11,14 @@ namespace App\Age;
 
 class Calculator
 {
+    /**
+     * @param \DateTime $dateOfBirth
+     * @return int
+     * @throws \Exception
+     */
     public function calculate(\DateTime $dateOfBirth)
     {
         $age = date_diff(new \DateTime(), $dateOfBirth)->y;
         return $age;
     }
-
 }

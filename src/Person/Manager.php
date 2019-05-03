@@ -32,7 +32,24 @@ class Manager
         $this->person = $person;
     }
 
-    public function getAge($dateOfBirth)
+    /**
+     * @param string $dateOfBirth
+     * @return Person
+     */
+    public function getPerson(string $dateOfBirth)
+    {
+        $age = $this->getAge($dateOfBirth);
+        $this->person->setAge($age);
+        $isAdult = $this->validateAge($age);
+        $this->person->setAdult($isAdult);
+        return $this->person;
+    }
+
+    /**
+     * @param string $dateOfBirth
+     * @return bool|int
+     */
+    private function getAge(string $dateOfBirth)
     {
         try{
             $date = new \DateTime($dateOfBirth);
@@ -43,18 +60,12 @@ class Manager
         return $result;
     }
 
-    public function verifyAge($age)
+    /**
+     * @param int $age
+     * @return bool
+     */
+    private function validateAge(int $age)
     {
         return $this->validator->validateAdulthood($age);
     }
-
-    public function getPerson($dateOfBirth)
-    {
-        $age = $this->getAge($dateOfBirth);
-        $this->person->setAge($age);
-        $isAdult = $this->verifyAge($age);
-        $this->person->setAdult($isAdult);
-        return $this->person;
-    }
-
 }
