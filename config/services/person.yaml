@@ -1,0 +1,12 @@
+parameters:
+
+services:
+  app.person.manager:
+    class: App\Person\Manager
+    arguments:
+      $calculator: '@app.age.calculator'
+      $validator: '@app.age.validator'
+      $person: '@app.model.person'
+
+  app.model.person:
+    class: App\Model\Person

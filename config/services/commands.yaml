@@ -1,0 +1,9 @@
+parameters:
+
+services:
+  app.command.age_calculator_command:
+    class: App\Command\AgeCalculatorCommand
+    arguments:
+      $personManager: '@app.person.manager'
+    tags: [name: console.command]
+

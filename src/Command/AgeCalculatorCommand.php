@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Age\Calculator;
+use App\Person\Manager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,12 +13,25 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class AgeCalculatorCommand extends Command
 {
     protected static $defaultName = 'app:age:calculator';
+    protected $personManager;
+
+    /**
+     * AgeCalculatorCommand constructor.
+     * @param  Manager $ageManager
+     */
+    public function __construct( Manager $personManager)
+    {
+        $this->personManager = $personManager;
+
+        parent::__construct();
+    }
+
 
     protected function configure()
     {
         $this
             ->setDescription('Calculates age by using input date of birth, optionally checks if adult')
-            ->addArgument('birthDate', InputArgument::OPTIONAL, 'Date of birth (Y-m-d format)')
+            ->addArgument('dateOfBirth', InputArgument::OPTIONAL, 'Date of birth (Y-m-d format)')
             ->addOption('adult', null, InputOption::VALUE_NONE, 'Check if adult')
         ;
     }
@@ -26,24 +39,21 @@ class AgeCalculatorCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $arg1 = $input->getArgument('birthDate');
+        $arg1 = $input->getArgument('dateOfBirth');
 
-        if ($arg1) {
+        $person = $this->personManager->getPerson($arg1);
+        $age = $person->getAge();
+        $isAdult = $person->isAdult();
 
-
-            $time = strtotime($arg1);
-            $newformat = new \DateTime($arg1);
-
-            $age = (new Calculator($newformat))->calculate();
-
-
-
+        if ( $age ) {
             $io->note(sprintf('Your age is: %s', $age));
-        }
-
-        if ($input->getOption('adult')) {
-            $io->warning( 'Your option is not Adult');
-            $io->success( 'Your option is Adult');
+            if ($input->getOption('adult') && $isAdult) {
+                $io->success( 'You are definitely adult');
+            } else if ($input->getOption('adult') && !$isAdult){
+                $io->warning( 'Sorry, you are not Adult');
+            }
+        } else {
+            $io->note('Wrong date input format - please enter date as "YYYY-mm-dd"');
         }
 
 

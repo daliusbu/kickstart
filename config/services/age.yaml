@@ -1,0 +1,8 @@
+parameters:
+
+services:
+  app.age.calculator:
+    class: App\Age\Calculator
+
+  app.age.validator:
+    class: App\Age\Validator
